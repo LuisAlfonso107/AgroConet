@@ -165,7 +165,7 @@
         
         <div v-else-if="error" class="text-center py-12">
           <p class="text-red-500">{{ error }}</p>
-          <button @click="fetchProducts" class="mt-4 px-6 py-2 bg-agro-green text-white rounded-lg hover:bg-agro-green-light">
+          <button @click="fetchFeaturedProducts" class="mt-4 px-6 py-2 bg-agro-green text-white rounded-lg hover:bg-agro-green-light">
             Reintentar
           </button>
         </div>
@@ -232,97 +232,31 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
+import { useProductos } from '../composables/useProductos'
 
-// Mobile menu state
+const { featuredProducts, loading, error, fetchFeaturedProducts } = useProductos()
+
 const mobileMenuOpen = ref(false)
 
-// Hero images - using realistic agricultural images
 const heroImages = ref([
-  'https://images.unsplash.com/photo-1524350876685-274059332603?w=1200&q=80', // Coffee plantation
-  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80', // Corn field
-  'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&q=80', // Coffee beans
-  'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?w=1200&q=80', // Harvest
+  'https://images.unsplash.com/photo-1524350876685-274059332603?w=1200&q=80',
+  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80',
+  'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&q=80',
+  'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?w=1200&q=80',
 ])
 
 const currentHeroImage = ref(0)
 let heroInterval = null
 
-// Featured products
-const featuredProducts = ref([])
-const loading = ref(true)
-const error = ref(null)
-
-// Rotate hero images every 7 seconds
 const startHeroRotation = () => {
   heroInterval = setInterval(() => {
     currentHeroImage.value = (currentHeroImage.value + 1) % heroImages.value.length
   }, 7000)
 }
 
-// Fetch products from json-server
-const fetchProducts = async () => {
-  loading.value = true
-  error.value = null
-  try {
-    const response = await axios.get('http://localhost:3001/productos', {
-      params: {
-        _limit: 4,
-        estado: 'disponible',
-        _sort: 'createdAt',
-        _order: 'desc'
-      }
-    })
-    featuredProducts.value = response.data
-  } catch (err) {
-    console.error('Error fetching products:', err)
-    // Fallback to sample data if server not available
-    featuredProducts.value = [
-      {
-        id: 1,
-        nombre: 'Café Caturra Orgánico',
-        region: 'Copán, Honduras',
-        precio: 150,
-        humedad: 12,
-        calificacion: 4.8,
-        imagen: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&q=80'
-      },
-      {
-        id: 2,
-        nombre: 'Maíz Amarillo Premium',
-        region: 'Olancho, Honduras',
-        precio: 45,
-        humedad: 14,
-        calificacion: 4.5,
-        imagen: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=500&q=80'
-      },
-      {
-        id: 3,
-        nombre: 'Café Geisha Selección',
-        region: 'Antigua Guatemala',
-        precio: 280,
-        humedad: 11,
-        calificacion: 4.9,
-        imagen: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80'
-      },
-      {
-        id: 4,
-        nombre: 'Frijol Rojo Nacional',
-        region: 'Nicaragua',
-        precio: 85,
-        humedad: 13,
-        calificacion: 4.6,
-        imagen: 'https://images.unsplash.com/photo-1600490036275-35f5f1656861?w=500&q=80'
-      }
-    ]
-  } finally {
-    loading.value = false
-  }
-}
-
 onMounted(() => {
   startHeroRotation()
-  fetchProducts()
+  fetchFeaturedProducts()
 })
 
 onUnmounted(() => {
