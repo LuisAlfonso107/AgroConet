@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-agro-green: #2E7D32;
+  --color-agro-green-light: #4CAF50;
+  --color-agro-tierra: #8D6E63;
+  --color-agro-crema: #FFF8E1;
+  --color-agro-amarillo: #FFC107;
+  --color-agro-naranja: #FF9800;
+  --font-family-sans: Avenir, Helvetica, Arial, sans-serif;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}

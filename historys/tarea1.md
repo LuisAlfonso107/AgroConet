@@ -2,30 +2,79 @@
 ---
 
 ### Historia de Usuario US-001
-**Visualizar Landing Page (Home)**
-Como visitante  
-Quiero ver la pantalla principal de la aplicación  
-Para entender qué es GranoDirecto y acceder rápidamente a las secciones principales
+**Visualizar Landing Page (Home) – Pantalla de bienvenida principal**
+**Como** visitante (potencial comprador o productor agrícola)  
+**Quiero** acceder a una pantalla de inicio atractiva, clara y rápida de cargar  
+**Para** entender inmediatamente qué es la plataforma, confiar en ella y decidir si quiero explorar como comprador o registrarme/publicar como productor
 
-**Criterios de Aceptación**  
-Escenario 1: Carga inicial  
-Dado que el usuario abre la app  
-Cuando carga la página Home  
-Entonces se muestra un hero con foto de finca de café, título “Del campo al comprador directo”, botón “Explorar catálogo” y botón “Soy productor”  
+**Criterios de Aceptación**
 
-Escenario 2: Secciones destacadas  
-Entonces aparecen 3 cards grandes: “Catálogo de productos”, “Para productores” y “Para compradores” con imágenes reales  
+**Escenario 1: Carga inicial – Hero section impactante (mobile & desktop)**
+Dado que el usuario abre la aplicación por primera vez (en móvil o desktop)  
+Cuando la página Home se carga completamente  
+Entonces:
+- Se muestra un **hero section** ocupando al menos el 80-90% del viewport inicial (full-width en móvil)
+- El hero incluye un **carrusel o fondo dinámico** con 3–5 imágenes reales y de alta calidad rotando automáticamente (cada 6–8 segundos):
+  - Fotos de fincas de café en cosecha, granos de maíz secando al sol, sacos en finca, manos recolectando, paisaje rural auténtico
+  - **No** usar fotos stock genéricas; simular con imágenes placeholder realistas (puedes usar Unsplash o db.json con urls)
+- Sobre las imágenes aparece texto grande y legible (contraste alto WCAG AA):
+  - Título principal: “Del campo directo a tu negocio o mesa”
+  - Subtítulo: “Conecta productores agrícolas con compradores honestos. Café, maíz, frijol y más – sin intermediarios innecesarios.”
+- Dos **CTAs principales prominentes** y diferenciados visualmente:
+  - Botón primario (verde/agro, grande): “Explorar productos disponibles” → lleva a /catalogo
+  - Botón secundario (outline o color tierra): “Soy productor – publica tu cosecha” → lleva a /registro?rol=productor o directamente a login/registro con rol preseleccionado
+- En móvil: los botones se apilan verticalmente, texto se reduce pero sigue legible (>16px), padding generoso para dedos
 
-**Notas**  
-• Usa datos estáticos + 2 productos destacados del json-server  
-• Responsive mobile-first (agricultores usan celular en el campo)
+**Escenario 2: Secciones de valor rápido debajo del hero**
+Dado que el usuario ha hecho scroll después del hero  
+Cuando visualiza las primeras secciones  
+Entonces aparecen al menos 3 bloques/cards horizontales o en columna (en móvil se apilan):
+- Card 1 – “Para compradores”:
+  - Icono/título: “Encuentra granos de calidad directo de finca”
+  - Texto breve: “Variedades, taza, humedad, certificaciones, precios transparentes. Compra por quintal o contenedor.”
+  - Imagen: tostador revisando granos o sacos listos para envío
+  - Botón: “Ver catálogo ahora” → /catalogo
+- Card 2 – “Para productores”:
+  - Icono/título: “Vende sin intermediarios caros”
+  - Texto breve: “Publica tu café, maíz o frijol. Llega a tostadores, molinos y exportadores. Controla precios y condiciones.”
+  - Imagen: agricultor con celular en finca subiendo foto
+  - Botón: “Comenzar a vender” → /registro?rol=productor
+- Card 3 – “Trazabilidad y confianza”:
+  - Icono/título: “Seguimiento completo + conexión real”
+  - Texto breve: “Agencias exportadoras actualizan estados. Sabes dónde está tu pedido o tu compra en todo momento.”
+  - Imagen: mapa simple o timeline de embarque
+  - Botón sutil: “Cómo funciona” → futura página estática o modal
 
-**Tareas**  
-TK-001-01 Crear vistas/Home.vue  
-TK-001-02 Implementar hero y cards de acceso rápido  
-TK-001-03 Conectar botón “Explorar catálogo” a ruta /catalogo
+**Escenario 3: Productos destacados (social proof inicial)**
+Dado que el usuario sigue scrolleando  
+Cuando llega a la sección “Cosechas destacadas”  
+Entonces se muestran 2–4 cards de productos reales traídos de json-server (/productos?_limit=4&estado=disponible&_sort=createdAt&_order=desc):
+- Cada card muestra: foto principal, nombre (“Café Caturra Orgánico – Finca La Esperanza”), precio por quintal, región, humedad, calificación promedio del productor
+- En móvil: scroll horizontal o grid 1 columna
+- CTA en cada card: “Ver detalles” → /producto/:id
 
----
+**Escenario 4: Rendimiento y accesibilidad básica (mobile-first obligatorio)**
+- La página debe cargar en < 3 segundos en 3G (imágenes optimizadas, lazy loading en secciones bajas)
+- Todo texto legible en móvil (mínimo 16px body, 24–32px títulos)
+- Contraste suficiente en textos sobre imágenes
+- Navegación superior mínima (solo logo + menú hamburguesa con “Catálogo”, “Iniciar sesión”, “Registro”)
+
+**Notas**
+- Prioridad absoluta: **mobile-first** – la mayoría de productores acceden desde celulares Android económicos en zonas rurales con internet lento.
+- Usa datos estáticos para textos e imágenes del hero; solo los productos destacados vienen de json-server.
+- Evita animaciones pesadas en hero para no afectar performance.
+- Colores sugeridos iniciales: verde agrícola (#2E7D32 / #4CAF50), tierra (#8D6E63), blanco/crema fondo, acentos naranja/amarillo cosecha.
+- En fase 1 no implementar login real; los botones de “Soy productor” pueden ir a una vista Registro.vue con select de rol.
+
+**Tareas (orden sugerido)**
+- TK-001-01 Crear el archivo vistas/Home.vue y definir estructura base (sections)
+- TK-001-02 Implementar hero section con fondo/imágenes rotativas + overlay texto + 2 CTAs principales
+- TK-001-03 Diseñar y maquetar las 3 cards de valor (“Para compradores”, “Para productores”, “Trazabilidad”)
+- TK-001-04 Crear sección “Cosechas destacadas” con fetch a json-server (/productos) y renderizar 4 cards
+- TK-001-05 Asegurar responsive design + mobile-first (usar media queries o Tailwind/Bootstrap si lo usas)
+- TK-001-06 Conectar botón “Explorar productos” a ruta /catalogo (preparar placeholder si router no está aún)
+- TK-001-07 Optimizar imágenes (lazy loading, tamaños adecuados) y probar carga en red lenta (Chrome DevTools)
+
 
 ### Historia de Usuario US-002
 **Visualizar Catálogo de Productos**
