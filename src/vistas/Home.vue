@@ -1,30 +1,7 @@
 <template>
   <div class="min-h-screen bg-crema">
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <router-link to="/" class="text-2xl font-bold text-agro-green">
-          🌾 AgroConet
-        </router-link>
-        <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-gray-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <div class="hidden md:flex gap-6 items-center">
-          <router-link to="/catalogo" class="text-gray-700 hover:text-agro-green font-medium">Catálogo</router-link>
-          <router-link to="/registro" class="text-gray-700 hover:text-agro-green font-medium">Registro</router-link>
-        </div>
-      </div>
-      <!-- Mobile Menu -->
-      <div v-if="mobileMenuOpen" class="md:hidden bg-white border-t">
-        <div class="flex flex-col p-4 gap-4">
-          <router-link to="/catalogo" class="text-gray-700 font-medium py-2" @click="mobileMenuOpen = false">Catálogo</router-link>
-          <router-link to="/registro" class="text-gray-700 font-medium py-2" @click="mobileMenuOpen = false">Registro</router-link>
-        </div>
-      </div>
-    </nav>
+   
 
     <!-- Hero Section -->
     <section class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">

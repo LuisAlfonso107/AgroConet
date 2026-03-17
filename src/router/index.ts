@@ -10,17 +10,22 @@ const routes = [
   {
     path: '/catalogo',
     name: 'Catalogo',
-    component: () => import('../vistas/Catalogo.vue')
+    component: () => import('../componentes/Catalogo.vue')
   },
   {
     path: '/producto/:id',
     name: 'ProductoDetalle',
-    component: () => import('../vistas/ProductoDetalle.vue')
+    component: () => import('../componentes/ProductoDetalle.vue')
   },
   {
     path: '/registro',
     name: 'Registro',
-    component: () => import('../vistas/Registro.vue')
+    component: () => import('../componentes/Registro.vue')
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../componentes/Login.vue')
   }
 ]
 
