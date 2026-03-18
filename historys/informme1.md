@@ -113,3 +113,6 @@ La Landing Page está funcional con:
 - Fallback de datos para demostración
 
 **Pendiente:** Ejecutar `npm run dev` para probar en navegador.
+---------------------------------------------------
+
+informe del catalogo.

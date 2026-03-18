@@ -10,12 +10,12 @@ const routes = [
   {
     path: '/catalogo',
     name: 'Catalogo',
-    component: () => import('../componentes/Catalogo.vue')
+    component: () => import('../vistas/CatalogoProductos.vue')
   },
   {
     path: '/producto/:id',
     name: 'ProductoDetalle',
-    component: () => import('../componentes/ProductoDetalle.vue')
+    component: () => import('../vistas/DetalleProducto.vue')
   },
   {
     path: '/registro',
