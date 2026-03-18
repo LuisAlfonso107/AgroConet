@@ -22,12 +22,12 @@
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-8">
         
-          <a 
-            href="#como-funciona" 
+          <router-link 
+            to="/como-funciona" 
             class="text-gray-700 dark:text-gray-200 hover:text-agro-green hover:scale-105 transition-all duration-200 font-medium"
           >
             Cómo funciona
-          </a>
+          </router-link>
           <router-link 
             to="/quienes-somos" 
             class="text-gray-700 dark:text-gray-200 hover:text-agro-green hover:scale-105 transition-all duration-200 font-medium"
@@ -125,14 +125,15 @@
           >
             📦 Catálogo
           </router-link>
-          <a 
-            href="#como-funciona"
+          <router-link 
+            to="/como-funciona"
             @click="closeMobileMenu"
             class="block px-4 py-3 text-lg font-medium text-gray-700 dark:text-gray-200 
                    hover:bg-agro-green/10 hover:text-agro-green rounded-lg transition-all duration-200"
+            active-class="bg-agro-green/10 text-agro-green font-semibold"
           >
             ❓ Cómo funciona
-          </a>
+          </router-link>
           <router-link 
             to="/quienes-somos"
             @click="closeMobileMenu"
