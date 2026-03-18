@@ -34,14 +34,12 @@
           >
             Quiénes Somos
           </router-link>
-          <a 
-            href="https://wa.me/1234567890" 
-            target="_blank"
-            rel="noopener noreferrer"
+          <router-link 
+            to="/contacto" 
             class="text-gray-700 dark:text-gray-200 hover:text-agro-green hover:scale-105 transition-all duration-200 font-medium"
           >
             Contacto
-          </a>
+          </router-link>
         </div>
 
         <!-- Desktop Actions -->
@@ -143,16 +141,15 @@
           >
             🌱 Quiénes Somos
           </router-link>
-          <a 
-            href="https://wa.me/1234567890"
-            target="_blank"
-            rel="noopener noreferrer"
+          <router-link 
+            to="/contacto"
             @click="closeMobileMenu"
             class="block px-4 py-3 text-lg font-medium text-gray-700 dark:text-gray-200 
                    hover:bg-agro-green/10 hover:text-agro-green rounded-lg transition-all duration-200"
+            active-class="bg-agro-green/10 text-agro-green font-semibold"
           >
             📞 Contacto
-          </a>
+          </router-link>
 
           <!-- Mobile Actions -->
           <div class="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
