@@ -67,11 +67,13 @@
           <!-- Submit Button -->
           <button 
             type="submit"
+            :disabled="loading"
             class="w-full py-3 bg-gradient-to-r from-agro-green to-agro-green-light text-white font-semibold rounded-lg
                    hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
           >
-            Iniciar sesión
+            {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
           </button>
+          <p v-if="errorMessage" class="text-sm text-red-600 text-center">{{ errorMessage }}</p>
         </form>
 
         <!-- Divider -->
@@ -109,14 +111,26 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuth } from '../composables/useAuth'
 
 const router = useRouter()
+const { login } = useAuth()
 const email = ref('')
 const password = ref('')
+const loading = ref(false)
+const errorMessage = ref('')
 
-const handleLogin = () => {
-  // Placeholder - lógica de autenticación se implementará en US posterior
-  console.log('Login:', email.value)
-  router.push('/')
+const handleLogin = async () => {
+  loading.value = true
+  errorMessage.value = ''
+
+  try {
+    await login(email.value, password.value)
+    router.push('/catalogo')
+  } catch {
+    errorMessage.value = 'Credenciales inválidas o API mock apagada.'
+  } finally {
+    loading.value = false
+  }
 }
 </script>

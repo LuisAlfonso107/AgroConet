@@ -1,4 +1,55 @@
 {
+  "users": [
+    {
+      "id": 1,
+      "name": "Comprador Demo",
+      "email": "comprador@agroconet.test",
+      "password": "demo123",
+      "userType": "comprador",
+      "createdAt": "2026-05-11T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Productor Demo",
+      "email": "productor@agroconet.test",
+      "password": "demo123",
+      "userType": "productor",
+      "createdAt": "2026-05-11T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Agencia Demo",
+      "email": "agencia@agroconet.test",
+      "password": "demo123",
+      "userType": "agencia",
+      "createdAt": "2026-05-11T00:00:00.000Z"
+    }
+  ],
+  "pedidos": [
+    {
+      "id": 1,
+      "productoId": 1,
+      "compradorId": 1,
+      "productor": "Finca La Esperanza",
+      "cantidadQuintales": 2,
+      "precioUnitario": 150,
+      "total": 300,
+      "estado": "solicitado",
+      "createdAt": "2026-05-11T00:00:00.000Z"
+    }
+  ],
+  "contactos": [],
+  "mensajesContacto": [],
+  "favoritos": [],
+  "tracking": [
+    {
+      "id": 1,
+      "pedidoId": 1,
+      "estado": "solicitado",
+      "descripcion": "Pedido creado por el comprador y pendiente de validación del productor.",
+      "updatedAt": "2026-05-11T00:00:00.000Z"
+    }
+  ],
   "productos": [
     {
       "id": 1,

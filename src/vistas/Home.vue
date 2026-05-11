@@ -18,7 +18,7 @@
         />
         <!-- Overlay -->
         <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60"></div>
-      </div>
+      </div>  
 
       <!-- Hero Content -->
       <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
@@ -213,13 +213,10 @@ import { useProductos } from '../composables/useProductos'
 
 const { featuredProducts, loading, error, fetchFeaturedProducts } = useProductos()
 
-const mobileMenuOpen = ref(false)
-
 const heroImages = ref([
   'https://images.unsplash.com/photo-1524350876685-274059332603?w=1200&q=80',
   'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80',
   'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&q=80',
-  'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?w=1200&q=80',
 ])
 
 const currentHeroImage = ref(0)

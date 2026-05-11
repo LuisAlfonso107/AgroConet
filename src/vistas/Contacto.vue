@@ -211,8 +211,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useApi } from '../composables/useApi'
 
 const mounted = ref(false)
+const { api } = useApi()
 
 const isLoading = ref(false)
 const successMsg = ref(false)
@@ -271,23 +273,30 @@ const submitForm = async () => {
 
   isLoading.value = true
 
-  // Simulate APi call
   try {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        // Random chance function (e.g. 5% chance of error simulation, disabled generally).
-        // Let's keep it robust and resolve manually.
-        resolve('OK')
-      }, 2000)
+    await api.post('/mensajesContacto', {
+      nombre: form.nombre.trim(),
+      email: form.email.trim().toLowerCase(),
+      telefono: form.telefono.trim(),
+      asunto: form.asunto,
+      mensaje: form.mensaje.trim(),
+      estado: 'nuevo',
+      createdAt: new Date().toISOString()
     })
 
     successMsg.value = true
-    console.log("Formulario enviado con éxito", form)
-    
-    // Opcional reset
-    setTimeout(() => {
-      // router.push('/catalogo')
-    }, 4000)
+    form.nombre = ''
+    form.email = ''
+    form.telefono = ''
+    form.asunto = ''
+    form.mensaje = ''
+    form.politicas = false
+    touched.nombre = false
+    touched.email = false
+    touched.telefono = false
+    touched.asunto = false
+    touched.mensaje = false
+    touched.politicas = false
 
   } catch (err) {
     errorMsg.value = true

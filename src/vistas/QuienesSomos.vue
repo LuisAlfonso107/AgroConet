@@ -1,12 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 overflow-hidden">
     <!-- Hero Section -->
-    <section class="relative h-[80vh] min-h-[600px] flex items-center justify-center fade-in-section">
+    <section class="relative min-h-[520px] md:min-h-[620px] flex items-start md:items-center justify-center pt-28 md:pt-24 pb-16">
       <!-- Background Graphic -->
       <div class="absolute inset-0 bg-gradient-to-br from-agro-green-light/20 to-agro-naranja/20 dark:from-agro-green-dark/30 dark:to-orange-900/30"></div>
       <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1595841696677-6489ff3f8cd1?auto=format&fit=crop&q=80')] bg-cover bg-center mix-blend-overlay opacity-30 dark:opacity-20 hidden md:block"></div>
       
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-16">
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
           Quiénes <span class="text-agro-green">Somos</span>
           <br class="hidden md:block"/>

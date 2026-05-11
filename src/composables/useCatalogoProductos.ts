@@ -80,6 +80,7 @@ interface CacheData {
   productos: Producto[]
   timestamp: number
   precios: Record<number, DatosMercado>
+  clima?: Record<number, DatosClima>
 }
 
 function getCache(): CacheData | null {
@@ -124,10 +125,8 @@ export function useCatalogoProductos() {
       if (cached) {
         productos.value = cached.productos
         datosMercado.value = cached.precios
-        productosEnriquecidos.value = cached.productos.map(p => ({
-          ...p,
-          mercado: cached.precios[p.id]
-        }))
+        datosClima.value = cached.clima || {}
+        syncProductosEnriquecidos(cached.productos)
         // Cargar clima en background
         enrichConClima(cached.productos)
         loading.value = false
@@ -160,13 +159,23 @@ export function useCatalogoProductos() {
       enrichConPrecios(products),
       enrichConClima(products)
     ])
+    syncProductosEnriquecidos(products)
 
     // Guardar en cache
     setCache({
       productos: products,
       timestamp: Date.now(),
-      precios: datosMercado.value
+      precios: datosMercado.value,
+      clima: datosClima.value
     })
+  }
+
+  const syncProductosEnriquecidos = (products: Producto[]) => {
+    productosEnriquecidos.value = products.map(p => ({
+      ...p,
+      clima: datosClima.value[p.id],
+      mercado: datosMercado.value[p.id]
+    }))
   }
 
   // Fetch precios desde API (usando fallback a datos estáticos)
@@ -178,11 +187,12 @@ export function useCatalogoProductos() {
         const tipo = producto.tipo
         const basePrice = FALLBACK_PRECIOS[tipo]?.precio || producto.precio
         const cambio = FALLBACK_PRECIOS[tipo]?.cambio || 0
+        const variacionDeterminista = ((producto.id % 5) - 2) * 0.25
         
         datosMercado.value[producto.id] = {
           precio: basePrice,
           moneda: 'USD',
-          cambio: cambio + (Math.random() * 2 - 1), // Variación aleatoria pequeña
+          cambio: cambio + variacionDeterminista,
           fuente: 'Commodities-API (estimado)',
           fecha: new Date().toISOString().split('T')[0]
         }
@@ -199,11 +209,7 @@ export function useCatalogoProductos() {
       }
     }
 
-    // Actualizar productos enriquecidos
-    productosEnriquecidos.value = products.map(p => ({
-      ...p,
-      mercado: datosMercado.value[p.id]
-    }))
+    syncProductosEnriquecidos(products)
   }
 
   // Fetch datos climáticos desde Open-Meteo (sin API key)
@@ -237,11 +243,7 @@ export function useCatalogoProductos() {
       }
     }
 
-    // Actualizar productos con clima
-    productosEnriquecidos.value = products.map(p => ({
-      ...p,
-      clima: datosClima.value[p.id]
-    }))
+    syncProductosEnriquecidos(products)
   }
 
   // Obtener producto por ID

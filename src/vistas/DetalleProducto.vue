@@ -91,14 +91,36 @@
             <p class="mt-4 text-gray-600">{{ producto.descripcion }}</p>
 
             <!-- Botones acción -->
-            <div class="flex gap-3 mt-6">
-              <button class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+            <div class="flex flex-col sm:flex-row gap-3 mt-6">
+              <button
+                :disabled="actionLoading"
+                @click="hacerPedido"
+                class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-60"
+              >
                 Hacer pedido
               </button>
-              <button class="flex-1 border-2 border-green-600 text-green-600 py-3 rounded-lg hover:bg-green-50 transition-colors font-medium">
+              <button
+                :disabled="actionLoading"
+                @click="contactarProductor"
+                class="flex-1 border-2 border-green-600 text-green-600 py-3 rounded-lg hover:bg-green-50 transition-colors font-medium disabled:opacity-60"
+              >
                 Contactar productor
               </button>
+              <button
+                :disabled="actionLoading"
+                @click="toggleFavorito"
+                class="sm:w-36 border-2 border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium disabled:opacity-60"
+              >
+                {{ isFavorite ? 'Guardado' : 'Favorito' }}
+              </button>
             </div>
+            <p
+              v-if="actionMessage"
+              class="mt-3 text-sm"
+              :class="actionStatus === 'success' ? 'text-green-700' : 'text-red-600'"
+            >
+              {{ actionMessage }}
+            </p>
           </div>
         </div>
 
@@ -196,10 +218,23 @@
           </div>
         </div>
 
-        <!-- Productos relacionados (simulado) -->
+        <!-- Trazabilidad inicial -->
         <div class="bg-white rounded-xl shadow-md p-6">
-          <h2 class="text-xl font-bold text-gray-800 mb-4">Productos relacionados</h2>
-          <p class="text-gray-500">Explora más productos del mismo tipo o región</p>
+          <h2 class="text-xl font-bold text-gray-800 mb-4">Trazabilidad inicial</h2>
+          <div class="grid sm:grid-cols-3 gap-3 text-sm">
+            <div class="rounded-lg bg-gray-50 p-3">
+              <p class="font-semibold text-gray-800">Origen</p>
+              <p class="text-gray-500">{{ producto.productor }} · {{ producto.region }}</p>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-3">
+              <p class="font-semibold text-gray-800">Control de calidad</p>
+              <p class="text-gray-500">Humedad {{ producto.humedad }}% · {{ producto.variedad }}</p>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-3">
+              <p class="font-semibold text-gray-800">Siguiente paso</p>
+              <p class="text-gray-500">Pedido solicitado y validación del productor.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -210,6 +245,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCatalogoProductos, type DatosClima, type DatosMercado } from '../composables/useCatalogoProductos'
+import { useMarketplaceActions } from '../composables/useMarketplaceActions'
 
 const route = useRoute()
 
@@ -223,6 +259,15 @@ const {
 } = useCatalogoProductos()
 
 const producto = ref<any>(null)
+const {
+  loading: actionLoading,
+  status: actionStatus,
+  message: actionMessage,
+  isFavorite,
+  hacerPedido,
+  contactarProductor,
+  toggleFavorito
+} = useMarketplaceActions(() => producto.value)
 
 // Computed para obtener datos específicos
 const productoId = computed(() => Number(route.params.id))

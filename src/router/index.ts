@@ -20,12 +20,12 @@ const routes = [
   {
     path: '/registro',
     name: 'Registro',
-    component: () => import('../componentes/Registro.vue')
+    component: () => import('../vistas/Registro.vue')
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../componentes/Login.vue')
+    component: () => import('../vistas/Login.vue')
   },
   {
     path: '/quienes-somos',
