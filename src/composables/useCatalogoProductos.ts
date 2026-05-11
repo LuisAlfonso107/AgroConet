@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { useApi } from './useApi'
 
 // Tipos para los datos
 export interface Producto {
@@ -17,6 +18,10 @@ export interface Producto {
   altura: string
   imagen: string
   productor: string
+  productorId?: number | string
+  stock?: number
+  estado?: 'disponible' | 'agotado' | 'pausado'
+  createdAt?: string
 }
 
 export interface DatosClima {
@@ -107,6 +112,7 @@ function setCache(data: CacheData): void {
 }
 
 export function useCatalogoProductos() {
+  const { api } = useApi()
   const productos = ref<Producto[]>([])
   const productosEnriquecidos = ref<(Producto & { clima?: DatosClima; mercado?: DatosMercado })[]>([])
   const loading = ref(false)
@@ -133,12 +139,8 @@ export function useCatalogoProductos() {
         return
       }
 
-      // Fetch desde db.json
-      const response = await fetch('/db.json')
-      if (!response.ok) throw new Error('Error al cargar db.json')
-      const data = await response.json()
-      
-      productos.value = data.productos || []
+      const response = await api.get('/productos')
+      productos.value = response.data || []
       
       // Enrich con datos de mercado y clima
       await enrichProductos(productos.value)

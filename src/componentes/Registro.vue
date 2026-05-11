@@ -48,7 +48,7 @@ import { useAuth, type UserRole } from '@/composables/useAuth'
 
 const { api } = useApi()
 const router = useRouter()
-const { setUser } = useAuth()
+const { setUser, dashboardPathForRole } = useAuth()
 
 const name = ref('')
 const email = ref('')
@@ -107,16 +107,17 @@ const handleRegister = async () => {
         createdAt: new Date().toISOString()
       })
 
-    setUser({
+    const authUser = {
       id: response.data.id,
       name: response.data.name,
       email: response.data.email,
       userType: response.data.userType
-    })
+    }
+    setUser(authUser)
 
-    successMessage.value = 'Registro exitoso. Redirigiendo al catálogo...'
+    successMessage.value = 'Registro exitoso. Redirigiendo a tu panel...'
     setTimeout(() => {
-      router.push('/catalogo')
+      router.push(dashboardPathForRole(authUser.userType))
     }, 1500)
   } catch (err) {
     console.error('Registration error:', err)

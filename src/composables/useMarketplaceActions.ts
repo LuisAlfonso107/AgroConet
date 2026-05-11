@@ -8,8 +8,11 @@ type ActionStatus = 'idle' | 'success' | 'error'
 
 interface PedidoPayload {
   productoId: number
+  nombreProducto: string
   compradorId: number | string
+  compradorNombre: string
   productor: string
+  productorId?: number | string
   cantidadQuintales: number
   precioUnitario: number
   total: number
@@ -28,7 +31,7 @@ interface ContactoPayload {
 
 interface FavoritoPayload {
   productoId: number
-  usuarioId: number | string
+  compradorId: number | string
   createdAt: string
 }
 
@@ -62,7 +65,7 @@ export function useMarketplaceActions(producto: () => Producto | null) {
     if (!currentProducto || !user) return false
 
     return favoritosLocales.value.some((favorito) => {
-      return favorito.productoId === currentProducto.id && favorito.usuarioId === user.id
+      return favorito.productoId === currentProducto.id && favorito.compradorId === user.id
     })
   })
 
@@ -87,8 +90,11 @@ export function useMarketplaceActions(producto: () => Producto | null) {
 
     const pedido: PedidoPayload = {
       productoId: currentProducto.id,
+      nombreProducto: currentProducto.nombre,
       compradorId: user.id,
+      compradorNombre: user.name,
       productor: currentProducto.productor,
+      productorId: currentProducto.productorId,
       cantidadQuintales: 1,
       precioUnitario: currentProducto.precio,
       total: currentProducto.precio,
@@ -148,13 +154,13 @@ export function useMarketplaceActions(producto: () => Producto | null) {
     const exists = isFavorite.value
     favoritosLocales.value = exists
       ? favoritosLocales.value.filter((favorito) => {
-          return !(favorito.productoId === currentProducto.id && favorito.usuarioId === user.id)
+          return !(favorito.productoId === currentProducto.id && favorito.compradorId === user.id)
         })
       : [
           ...favoritosLocales.value,
           {
             productoId: currentProducto.id,
-            usuarioId: user.id,
+            compradorId: user.id,
             createdAt: new Date().toISOString(),
           },
         ]
@@ -163,7 +169,7 @@ export function useMarketplaceActions(producto: () => Producto | null) {
     if (!exists) {
       await api.post('/favoritos', {
         productoId: currentProducto.id,
-        usuarioId: user.id,
+        compradorId: user.id,
         createdAt: new Date().toISOString(),
       }).catch(() => undefined)
     }

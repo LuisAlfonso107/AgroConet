@@ -29,6 +29,13 @@
           Conecta productores agrícolas con compradores honestos. Café, maíz, frijol y más – sin intermediarios innecesarios.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <router-link
+            v-if="currentUser"
+            :to="dashboardLink"
+            class="px-8 py-4 bg-white text-agro-green text-lg font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          >
+            Ir a mi panel
+          </router-link>
           <router-link 
             to="/catalogo" 
             class="px-8 py-4 bg-agro-green hover:bg-agro-green-light text-white text-lg font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
@@ -208,10 +215,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useProductos } from '../composables/useProductos'
+import { useAuth } from '../composables/useAuth'
 
 const { featuredProducts, loading, error, fetchFeaturedProducts } = useProductos()
+const { currentUser, dashboardPathForRole } = useAuth()
+const dashboardLink = computed(() => currentUser.value ? dashboardPathForRole(currentUser.value.userType) : '/login')
 
 const heroImages = ref([
   'https://images.unsplash.com/photo-1524350876685-274059332603?w=1200&q=80',

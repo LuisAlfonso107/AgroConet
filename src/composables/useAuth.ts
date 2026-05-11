@@ -75,6 +75,15 @@ export function useAuth() {
     setUser(null)
   }
 
+  const dashboardPathForRole = (userRole: UserRole) => {
+    const paths: Record<UserRole, string> = {
+      comprador: '/dashboard/comprador',
+      productor: '/dashboard/productor',
+      agencia: '/dashboard/agencia',
+    }
+    return paths[userRole]
+  }
+
   return {
     currentUser,
     isAuthenticated,
@@ -82,5 +91,6 @@ export function useAuth() {
     setUser,
     login,
     logout,
+    dashboardPathForRole,
   }
 }

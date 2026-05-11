@@ -114,7 +114,7 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 
 const router = useRouter()
-const { login } = useAuth()
+const { login, dashboardPathForRole } = useAuth()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
@@ -125,8 +125,8 @@ const handleLogin = async () => {
   errorMessage.value = ''
 
   try {
-    await login(email.value, password.value)
-    router.push('/catalogo')
+    const user = await login(email.value, password.value)
+    router.push(dashboardPathForRole(user.userType))
   } catch {
     errorMessage.value = 'Credenciales inválidas o API mock apagada.'
   } finally {
