@@ -149,7 +149,7 @@
         
         <div v-else-if="error" class="text-center py-12">
           <p class="text-red-500">{{ error }}</p>
-          <button @click="fetchFeaturedProducts" class="mt-4 px-6 py-2 bg-agro-green text-white rounded-lg hover:bg-agro-green-light">
+          <button @click="() => fetchFeaturedProducts()" class="mt-4 px-6 py-2 bg-agro-green text-white rounded-lg hover:bg-agro-green-light">
             Reintentar
           </button>
         </div>
@@ -214,7 +214,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useProductos } from '../composables/useProductos'
 import { useAuth } from '../composables/useAuth'
@@ -230,7 +230,7 @@ const heroImages = ref([
 ])
 
 const currentHeroImage = ref(0)
-let heroInterval = null
+let heroInterval: ReturnType<typeof setInterval> | null = null
 
 const startHeroRotation = () => {
   heroInterval = setInterval(() => {
