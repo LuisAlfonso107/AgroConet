@@ -1,19 +1,21 @@
 from flask import request, g
 from app.core.responses import success_response, error_response
 from app.api.favoritos.services import FavoritoService
+from app.api.favoritos.schemas import FavoritoSchema
 
 favorito_service = FavoritoService()
+favorito_schema = FavoritoSchema()
 
 
 def listar():
     favoritos = favorito_service.listar(g.current_user_id)
-    return success_response(favoritos)
+    return success_response(favorito_schema.dump(favoritos, many=True))
 
 
 def agregar():
     data = request.get_json()
     favorito = favorito_service.agregar(g.current_user_id, data.get('producto_id'))
-    return success_response(favorito, status=201, message='Favorito agregado exitosamente')
+    return success_response(favorito_schema.dump(favorito), status=201, message='Favorito agregado exitosamente')
 
 
 def eliminar(favorito_id):

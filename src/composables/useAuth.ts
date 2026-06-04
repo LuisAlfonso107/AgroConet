@@ -10,11 +10,6 @@ export interface AuthUser {
   userType: UserRole
 }
 
-interface UserRecord extends AuthUser {
-  password?: string
-  createdAt?: string
-}
-
 const STORAGE_KEY = 'agroconet_auth_user'
 
 const currentUser = ref<AuthUser | null>(readStoredUser())
@@ -31,19 +26,11 @@ function readStoredUser(): AuthUser | null {
 function persistUser(user: AuthUser | null) {
   if (!user) {
     localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem('agroconet_access_token')
+    localStorage.removeItem('agroconet_refresh_token')
     return
   }
-
   localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
-}
-
-function toAuthUser(user: UserRecord): AuthUser {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    userType: user.userType,
-  }
 }
 
 export function useAuth() {
@@ -57,22 +44,48 @@ export function useAuth() {
   }
 
   const login = async (email: string, password: string): Promise<AuthUser> => {
-    const response = await api.get<UserRecord[]>('/users', {
-      params: { email: email.trim().toLowerCase() },
-    })
-    const user = response.data[0]
+    const response = await api.post('/auth/login', { email, password })
+    const { access_token, refresh_token, user } = response.data.data
 
-    if (!user || (user.password && user.password !== password)) {
-      throw new Error('Credenciales inválidas')
+    localStorage.setItem('agroconet_access_token', access_token)
+    localStorage.setItem('agroconet_refresh_token', refresh_token)
+
+    const authUser: AuthUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userType: user.user_type,
     }
-
-    const authUser = toAuthUser(user)
     setUser(authUser)
     return authUser
   }
 
-  const logout = () => {
-    setUser(null)
+  const register = async (name: string, email: string, password: string, userType: UserRole): Promise<AuthUser> => {
+    const response = await api.post('/auth/register', {
+      name, email, password, user_type: userType,
+    })
+    const user = response.data.data
+    const authUser: AuthUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userType: user.user_type,
+    }
+    return authUser
+  }
+
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem('agroconet_refresh_token')
+      if (token) {
+        await api.post('/auth/logout', {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      }
+    } catch {
+    } finally {
+      setUser(null)
+    }
   }
 
   const dashboardPathForRole = (userRole: UserRole) => {
@@ -90,6 +103,7 @@ export function useAuth() {
     role,
     setUser,
     login,
+    register,
     logout,
     dashboardPathForRole,
   }

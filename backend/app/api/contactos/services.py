@@ -1,27 +1,29 @@
+from app.extensions import db
+from app.api.contactos.models import Contacto
+from app.api.productos.models import Producto
+from app.core.exceptions import NotFoundError
+
+
 class ContactoService:
 
     def listar(self, usuario_id=None):
-        """List contact inquiries, optionally filtered by user.
-
-        Args:
-            usuario_id (str, optional): UUID of the user.
-
-        Returns:
-            list: List of Contacto instances.
-        """
-        raise NotImplementedError
+        query = Contacto.query
+        if usuario_id:
+            query = query.filter_by(usuario_id=usuario_id)
+        return query.order_by(Contacto.created_at.desc()).all()
 
     def crear(self, data, usuario_id):
-        """Create a contact inquiry from a user about a product.
+        producto_id = data.get('producto_id')
+        if producto_id:
+            producto = Producto.query.get(producto_id)
+            if not producto:
+                raise NotFoundError('Producto no encontrado')
 
-        Args:
-            data (dict): Validated contact data.
-            usuario_id (str): UUID of the sender.
-
-        Returns:
-            Contacto: Created contact instance.
-
-        Raises:
-            NotFoundError: If product does not exist.
-        """
-        raise NotImplementedError
+        contacto = Contacto(
+            usuario_id=usuario_id,
+            producto_id=producto_id,
+            mensaje=data['mensaje'],
+        )
+        db.session.add(contacto)
+        db.session.commit()
+        return contacto

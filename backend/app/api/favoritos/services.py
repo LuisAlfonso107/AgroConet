@@ -1,39 +1,33 @@
+from app.extensions import db
+from app.api.favoritos.models import Favorito
+from app.api.productos.models import Producto
+from app.core.exceptions import NotFoundError, ConflictError
+
+
 class FavoritoService:
 
     def listar(self, comprador_id):
-        """List favorites for a buyer.
-
-        Args:
-            comprador_id (str): UUID of the buyer.
-
-        Returns:
-            list: List of Favorito instances with nested producto.
-        """
-        raise NotImplementedError
+        return Favorito.query.filter_by(comprador_id=comprador_id).all()
 
     def agregar(self, comprador_id, producto_id):
-        """Add a product to favorites.
+        producto = Producto.query.get(producto_id)
+        if not producto:
+            raise NotFoundError('Producto no encontrado')
 
-        Args:
-            comprador_id (str): UUID of the buyer.
-            producto_id (str): UUID of the product.
+        existente = Favorito.query.filter_by(
+            comprador_id=comprador_id, producto_id=producto_id
+        ).first()
+        if existente:
+            raise ConflictError('El producto ya está en favoritos')
 
-        Returns:
-            Favorito: Created favorite instance.
-
-        Raises:
-            ConflictError: If already favorited.
-            NotFoundError: If product does not exist.
-        """
-        raise NotImplementedError
+        favorito = Favorito(comprador_id=comprador_id, producto_id=producto_id)
+        db.session.add(favorito)
+        db.session.commit()
+        return favorito
 
     def eliminar(self, favorito_id):
-        """Remove a favorite.
-
-        Args:
-            favorito_id (str): UUID of the favorite entry.
-
-        Raises:
-            NotFoundError: If favorite does not exist.
-        """
-        raise NotImplementedError
+        favorito = Favorito.query.get(favorito_id)
+        if not favorito:
+            raise NotFoundError('Favorito no encontrado')
+        db.session.delete(favorito)
+        db.session.commit()

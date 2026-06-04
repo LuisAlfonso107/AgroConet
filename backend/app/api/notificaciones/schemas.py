@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.notificaciones.models import Notificacion
 
 
 class NotificacionSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.notificaciones.models import Notificacion
-
     class Meta:
         model = Notificacion
         load_instance = True

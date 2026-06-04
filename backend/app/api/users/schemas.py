@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.users.models import User
 
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.users.models import User
-
     class Meta:
         model = User
         exclude = ('password', 'refresh_token')

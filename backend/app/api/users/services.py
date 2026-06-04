@@ -1,47 +1,41 @@
+from app.extensions import db, bcrypt
+from app.api.users.models import User
+from app.core.exceptions import NotFoundError, UnauthorizedError
+
+
 class UserService:
 
     def get_me(self, user_id):
-        """Get current authenticated user profile.
-
-        Args:
-            user_id (str): UUID of the authenticated user.
-
-        Returns:
-            User: User instance with all profile fields.
-
-        Raises:
-            NotFoundError: If user does not exist.
-        """
-        raise NotImplementedError
+        user = User.query.get(user_id)
+        if not user:
+            raise NotFoundError('Usuario no encontrado')
+        return user
 
     def update_me(self, user_id, data):
-        """Update current user profile fields.
+        user = User.query.get(user_id)
+        if not user:
+            raise NotFoundError('Usuario no encontrado')
 
-        Args:
-            user_id (str): UUID of the authenticated user.
-            data (dict): Validated subset of profile fields to update.
+        allowed_fields = [
+            'name', 'telefono', 'foto_perfil', 'empresa', 'direccion_envio',
+            'direcciones_envio', 'pais', 'preferencias_notificacion', 'finca',
+            'ubicacion', 'descripcion',
+        ]
+        for field in allowed_fields:
+            if field in data:
+                setattr(user, field, data[field])
 
-        Returns:
-            User: Updated user instance.
-
-        Raises:
-            NotFoundError: If user does not exist.
-        """
-        raise NotImplementedError
+        db.session.commit()
+        return user
 
     def change_password(self, user_id, current_password, new_password):
-        """Change user password after verifying current password.
+        user = User.query.get(user_id)
+        if not user:
+            raise NotFoundError('Usuario no encontrado')
 
-        Args:
-            user_id (str): UUID of the authenticated user.
-            current_password (str): Current plain-text password.
-            new_password (str): New plain-text password.
+        if not bcrypt.check_password_hash(user.password, current_password):
+            raise UnauthorizedError('La contraseña actual no es correcta')
 
-        Returns:
-            dict: Success message.
-
-        Raises:
-            UnauthorizedError: If current_password does not match.
-            UnprocessableError: If new_password does not meet requirements.
-        """
-        raise NotImplementedError
+        user.password = bcrypt.generate_password_hash(new_password, rounds=12).decode('utf-8')
+        db.session.commit()
+        return {'message': 'Contraseña cambiada exitosamente'}

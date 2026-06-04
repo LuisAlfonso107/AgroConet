@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.contactos.models import Contacto
 
 
 class ContactoSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.contactos.models import Contacto
-
     class Meta:
         model = Contacto
         load_instance = True

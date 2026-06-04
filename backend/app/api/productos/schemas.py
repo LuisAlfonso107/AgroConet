@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.productos.models import Producto
 
 
 class ProductoSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.productos.models import Producto
-
     class Meta:
         model = Producto
         load_instance = True

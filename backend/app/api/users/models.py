@@ -35,7 +35,6 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
     productos = db.relationship('Producto', backref='productor_user', lazy='dynamic')
-    favoritos = db.relationship('Favorito', backref='comprador_user', lazy='dynamic', foreign_keys='Favorito.comprador_id')
     contactos = db.relationship('Contacto', backref='usuario', lazy='dynamic')
 
     def __repr__(self):

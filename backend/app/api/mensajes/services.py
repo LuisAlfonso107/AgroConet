@@ -1,15 +1,16 @@
+from app.extensions import db
+from app.api.mensajes.models import MensajeContacto
+
+
 class MensajeService:
 
     def crear(self, data):
-        """Create a contact message from an anonymous visitor.
-
-        Args:
-            data (dict): Validated message data with nombre, email, asunto, mensaje.
-
-        Returns:
-            MensajeContacto: Created message instance.
-
-        Raises:
-            UnprocessableError: If validation fails.
-        """
-        raise NotImplementedError
+        mensaje = MensajeContacto(
+            nombre=data['nombre'],
+            email=data['email'],
+            asunto=data.get('asunto', ''),
+            mensaje=data['mensaje'],
+        )
+        db.session.add(mensaje)
+        db.session.commit()
+        return mensaje

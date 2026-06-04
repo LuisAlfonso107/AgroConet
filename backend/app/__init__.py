@@ -19,12 +19,7 @@ def create_app(config_name=None):
     migrate.init_app(app, db)
     ma.init_app(app)
 
-    register_error_handlers(app)
-
-    from app.api import register_blueprints
-    register_blueprints(app)
-
-    # Import all models so Alembic detects them
+    # Import all models so Alembic detects them and relationships resolve
     from app.api.users.models import User
     from app.api.productos.models import Producto
     from app.api.pedidos.models import Pedido
@@ -33,6 +28,11 @@ def create_app(config_name=None):
     from app.api.contactos.models import Contacto
     from app.api.mensajes.models import MensajeContacto
     from app.api.notificaciones.models import Notificacion
+
+    register_error_handlers(app)
+
+    from app.api import register_blueprints
+    register_blueprints(app)
 
     @app.route('/api/health')
     def health():

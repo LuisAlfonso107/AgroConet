@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.mensajes.models import MensajeContacto
 
 
 class MensajeContactoSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.mensajes.models import MensajeContacto
-
     class Meta:
         model = MensajeContacto
         load_instance = True

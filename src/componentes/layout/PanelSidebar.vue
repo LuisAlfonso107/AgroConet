@@ -70,7 +70,8 @@ const itemsByRole: Record<UserRole, { label: string; to: string }[]> = {
     { label: 'Mi Perfil', to: '/dashboard/productor/perfil' },
   ],
   agencia: [
-    { label: 'Resumen', to: '/dashboard/agencia' },
+    { label: 'Panel Principal', to: '/dashboard/agencia' },
+    { label: 'Catálogo', to: '/catalogo' },
   ],
 }
 

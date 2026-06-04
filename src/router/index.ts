@@ -130,7 +130,7 @@ const routes = [
   {
     path: '/dashboard/agencia',
     name: 'DashboardAgencia',
-    component: () => import('../vistas/DashboardPendiente.vue'),
+    component: () => import('../vistas/DashboardAgencia.vue'),
     meta: { requiresAuth: true, role: 'agencia' }
   }
 ]

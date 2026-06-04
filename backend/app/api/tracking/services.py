@@ -1,33 +1,34 @@
+from app.extensions import db
+from app.api.tracking.models import TrackingEvento
+from app.api.pedidos.models import Pedido
+from app.core.exceptions import NotFoundError
+
+
 class TrackingService:
 
     def listar_por_pedido(self, pedido_id, order='asc'):
-        """List tracking events for an order.
+        pedido = Pedido.query.get(pedido_id)
+        if not pedido:
+            raise NotFoundError('Pedido no encontrado')
 
-        Args:
-            pedido_id (str): UUID of the order.
-            order (str): Sort order ('asc' or 'desc').
-
-        Returns:
-            list: List of TrackingEvento instances.
-
-        Raises:
-            NotFoundError: If order does not exist.
-        """
-        raise NotImplementedError
+        query = TrackingEvento.query.filter_by(pedido_id=pedido_id)
+        if order == 'asc':
+            query = query.order_by(TrackingEvento.created_at.asc())
+        else:
+            query = query.order_by(TrackingEvento.created_at.desc())
+        return query.all()
 
     def agregar_evento(self, pedido_id, user_id, data):
-        """Add a new tracking event to an order.
+        pedido = Pedido.query.get(pedido_id)
+        if not pedido:
+            raise NotFoundError('Pedido no encontrado')
 
-        Args:
-            pedido_id (str): UUID of the order.
-            user_id (str): UUID of the user adding the event.
-            data (dict): Validated event data with estado and descripcion.
-
-        Returns:
-            TrackingEvento: Created event instance.
-
-        Raises:
-            NotFoundError: If order does not exist.
-            UnprocessableError: If state transition is invalid.
-        """
-        raise NotImplementedError
+        evento = TrackingEvento(
+            pedido_id=pedido_id,
+            user_id=user_id,
+            estado=data['estado'],
+            descripcion=data['descripcion'],
+        )
+        db.session.add(evento)
+        db.session.commit()
+        return evento

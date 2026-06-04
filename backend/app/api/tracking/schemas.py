@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.tracking.models import TrackingEvento
 
 
 class TrackingEventoSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.tracking.models import TrackingEvento
-
     class Meta:
         model = TrackingEvento
         load_instance = True

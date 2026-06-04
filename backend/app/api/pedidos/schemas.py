@@ -1,10 +1,9 @@
 from marshmallow import fields, validate
 from app.extensions import ma
+from app.api.pedidos.models import Pedido
 
 
 class PedidoSchema(ma.SQLAlchemyAutoSchema):
-    from app.api.pedidos.models import Pedido
-
     class Meta:
         model = Pedido
         load_instance = True
